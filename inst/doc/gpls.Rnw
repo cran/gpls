@@ -8,7 +8,7 @@
 % \VignettePackage{gpls}
 \documentclass[11pt]{article}
 
-\usepackage{amsmath,epsfig,psfig,fullpage}
+\usepackage{amsmath,epsfig,fullpage}
 \usepackage{graphicx}
 \usepackage[authoryear,round]{natbib}
 \usepackage{hyperref}
@@ -22,7 +22,7 @@
 
 %\parindent 0in
 
-%\bibliographystyle{plainnat}
+\bibliographystyle{plainnat}
 
 \begin{document}
 \title{Classification using Generalized Partial Least Squares}
@@ -142,5 +142,34 @@ glpls1a.mlogit.cv.error(x,y,mlogit=FALSE,br=TRUE)
 
 @
 
-%\bibliography{gpls}
+
+\subsection{Fitting Models to data}
+
+Here we demonstrate the use of \Rfunction{gpls} on some standard
+machine learning examples. We first make use of the Pima Indian data
+from the MASS package.
+
+<<pimaEx>>=
+library(MASS)
+
+ m1 = gpls(type~., Pima.tr)
+
+
+ p1 = predict(m1, Pima.te[,-8])
+
+
+##when we get to the multi-response problems
+     data(iris3)
+     Iris <- data.frame(rbind(iris3[,,1], iris3[,,2], iris3[,,3]),
+                        Sp = rep(c("s","c","v"), rep(50,3)))
+     train <- sample(1:150, 75)
+     table(Iris$Sp[train])
+     ## your answer may differ
+     ##  c  s  v
+     ## 22 23 30
+     z <- lda(Sp ~ ., Iris, prior = c(1,1,1)/3, subset = train)
+     predict(z, Iris[-train, ])$class
+
+@
+\bibliography{gpls}
 \end{document}
